@@ -1,0 +1,10 @@
+{
+	"files.associations": {
+		"screen.h": "c",
+		"function.h": "c",
+		"timer.h": "c",
+		"types.h": "c",
+		"ports.h": "c",
+		"paging.h": "c"
+	}
+}
