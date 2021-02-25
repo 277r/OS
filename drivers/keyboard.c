@@ -9,7 +9,7 @@
 // release key = key + 0x80
 // there's something about E0 that i don't understand yet
 #define BACKSPACE 0x0E
-#define ENTER 0x1C
+#define ENTER 0x1C 
 #define LSHIFT 0x2A
 #define LSHIFTRELEASE 0xAA
 #define ESC 1
@@ -67,6 +67,8 @@ static void keyboard_callback(registers_t regs)
 	}
 	else if (scancode == CTRLRELEASE)
 	{
+		kprint("\n");
+
 		ctrl = 0;
 		return;
 	}
@@ -82,7 +84,7 @@ static void keyboard_callback(registers_t regs)
 	}
 
 	// control and alt keys control and alternate, these keys can't be used with output
-	if (ctrl || alt)
+	else if (ctrl || alt)
 	{
 		if (scancode == BACKSPACE){
 			// delete word/row?
@@ -96,16 +98,24 @@ static void keyboard_callback(registers_t regs)
 		}
 		// more stuff
 	}
+	else if (scancode == ENTER)
+	{
+		kprint("\n");
+		
+		user_input(key_buffer);
+		key_buffer[0] = '\0';
+	}
 	else
 	{
 
 		// shift & caps = normal alphabet
-		// shift or caps = capitalized alphabet
+		// shift XOR caps = capitalized alphabet
 		// none = normal alphabet
 		if (shift ^ caps)
 		{
-			if (scancode > SC_MAX)
+			if (scancode > SC_MAX){
 				return;
+			}
 			else if (scancode == BACKSPACE)
 			{
 				if (!(strlen(key_buffer) > 0))
@@ -113,12 +123,7 @@ static void keyboard_callback(registers_t regs)
 				backspace(key_buffer);
 				kprint_backspace();
 			}
-			else if (scancode == ENTER)
-			{
-				kprint("\n");
-				user_input(key_buffer);
-				key_buffer[0] = '\0';
-			}
+			
 			else
 			{
 
@@ -136,19 +141,14 @@ static void keyboard_callback(registers_t regs)
 				return;
 			}
 
-			if (scancode == BACKSPACE)
+			else if (scancode == BACKSPACE)
 			{
 				if (!(strlen(key_buffer) > 0))
 					return;
 				backspace(key_buffer);
 				kprint_backspace();
 			}
-			else if (scancode == ENTER)
-			{
-				kprint("\n");
-				user_input(key_buffer);
-				key_buffer[0] = '\0';
-			}
+			
 			else
 			{
 

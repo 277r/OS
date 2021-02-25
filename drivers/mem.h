@@ -1,1 +1,2 @@
-long getMemSize();
+
+long long getMemSize();

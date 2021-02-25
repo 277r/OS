@@ -42,7 +42,13 @@ void user_input(char *input)
 	}
 	else if (strcmp(input, "memsize") == 0){
 		kprint("current memsize: ");
-		printInt(getMemSize() * 64);
+		printInt(getMemSize());
+		kprint("kB");
+	}
+	else if (strcmp(input, "mathtests") == 0)
+	{
+		kprint("h");
+		printInt(324);
 		kprint("kB");
 	}
 

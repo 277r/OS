@@ -8,8 +8,12 @@
 isr_t interrupt_handlers[256];
 /* Can't do this with a loop because we need the address
  * of the function names */
-void isr_install() {
-    set_idt_gate(0, (u32)isr0);
+
+extern void set_idt_gate();
+extern void set_idt();
+void isr_install()
+{
+	set_idt_gate(0, (u32)isr0);
     set_idt_gate(1, (u32)isr1);
     set_idt_gate(2, (u32)isr2);
     set_idt_gate(3, (u32)isr3);
@@ -76,6 +80,8 @@ void isr_install() {
 
 
     set_idt(); // Load with ASM
+
+	return;
 }
 
 /* To print the message which defines every exception */

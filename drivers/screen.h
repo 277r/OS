@@ -23,5 +23,5 @@ void kprint_backspace();
 
 
 void printHex(unsigned char ionput);
-void printInt(long int in);
+void printInt(long long in);
 #endif

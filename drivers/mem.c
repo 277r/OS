@@ -1,7 +1,54 @@
+#include "../cpu/types.h"
 #include "mem.h"
 
 
 
+
+
+// SMAP entry structure
+
+typedef struct SMAP_entry
+{
+
+	long  BaseL; // base address long long
+	long  BaseH;
+	long  LengthL; // length long long
+	long  LengthH;
+	long  Type;		// entry Type
+	long  ACPI;		// extended
+} __attribute__((packed)) SMAP_entry_t;
+
+long long getMemSize(){
+	// we could optimize this later but idk
+	int *entry_count = (int*)0x8000;
+	SMAP_entry_t *smap = (SMAP_entry_t *)0x1000;
+	long smapInt = 0;
+
+	const int smap_size = 0x2000;
+
+	long long fullSize = 0;
+
+	if (*entry_count == -1)
+	{
+		// error - halt system and/or show error message
+		return 1;
+	}
+
+	else
+	{
+		// process memory map
+
+		// bitshift lower 32 stuff
+	//	fullSize |= smap->LengthH << 32;
+		fullSize |= smap->LengthL;
+
+		// we need to process this, this output does nothing
+		return fullSize;
+	}
+}
+
+
+// all code below did not seem to work, trying to use something in boot/bootsect.asm
 /*
 long getMemSize(){
 	
@@ -29,8 +76,8 @@ long getMemSize(){
 		"jcxz .use_ax;\n"
 		"mov %ax, %cx;\n"
 		"mov %bx, %dx;\n");
-*/
-	/* also does NOT seem to work
+
+ also does NOT seem to work
 	asm(
 		".ERR:\n\t"
 		"ret;");
@@ -62,9 +109,7 @@ long getMemSize(){
 	asm("movl %%edx,%0"
 			: "=r"(x));
 	return x;
-}*/
-
-/*
+}
 long long getMemSizeExtended()
 {
 	long long int x;
@@ -88,35 +133,19 @@ long long getMemSizeExtended()
 	asm("\t movl %%ebx,%0"
 		: "=r"(x));
 	return x;
-}*/
-
-
-
-
-
+}
 // we'll just use some copy paste thing from online
 
 __asm__(".code16gcc\n");
 
-// SMAP entry structure
-
-typedef struct SMAP_entry
-{
-
-	unsigned long BaseL; // base address uint64_t
-	unsigned long BaseH;
-	unsigned long LengthL; // length uint64_t
-	unsigned long LengthH;
-	unsigned long Type; // entry Type
-	unsigned long ACPI; // extended
-
-} __attribute__((packed)) SMAP_entry_t;
-
 // load memory map to buffer - note: regparm(3) avoids stack issues with gcc in real mode
-int __attribute__((noinline)) __attribute__((regparm(3))) detectMemory(SMAP_entry_t *buffer, int maxentries)
+void __attribute__((noinline)) __attribute__((regparm(3))) detectMemory()
 {
+	SMAP_entry_t *buffer = (SMAP_entry_t *)0x1000;
+	int maxentries = 0x2000 / sizeof(SMAP_entry_t);
 	unsigned long contID = 0;
 	int entries = 0, signature, bytes;
+	int *entriesLoc;
 	do
 	{
 		__asm__ __volatile__("int  $0x15"
@@ -134,27 +163,10 @@ int __attribute__((noinline)) __attribute__((regparm(3))) detectMemory(SMAP_entr
 			entries++;
 		}
 	} while (contID != 0 && entries < maxentries);
+
+	// put entries in 960
+	entriesLoc = (int *)960;
+	*entriesLoc = entries;
 	return entries;
 }
-
-long getMemSize(){
-	SMAP_entry_t *smap = (SMAP_entry_t *)0x1000;
-	long smapInt = 0;
-
-	const int smap_size = 0x2000;
-
-	int entry_count = detectMemory(smap, smap_size / sizeof(SMAP_entry_t));
-	
-	if (entry_count == -1)
-	{
-		// error - halt system and/or show error message
-		return 1;
-	}
-
-	else
-	{
-		// process memory map
-
-		return smapInt;
-	}
-}
+*/

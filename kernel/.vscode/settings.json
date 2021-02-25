@@ -5,6 +5,9 @@
 		"timer.h": "c",
 		"types.h": "c",
 		"ports.h": "c",
-		"paging.h": "c"
+		"paging.h": "c",
+		"math.h": "c",
+		"isr.h": "c",
+		"mem.h": "c"
 	}
 }

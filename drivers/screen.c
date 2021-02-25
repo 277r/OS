@@ -1,6 +1,8 @@
 #include "screen.h"
 #include "../cpu/ports.h"
 #include "../libc/mem.h"
+#include "../libc/math.h"
+
 // Declaration of private functions */
 int get_cursor_offset();
 void set_cursor_offset(int offset);
@@ -9,35 +11,7 @@ int get_offset(int col, int row);
 int get_offset_row(int offset);
 int get_offset_col(int offset);
 
-void printHex(unsigned char ionput)
-{
-	char hexChardata[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
-	int a = ionput % 16;
-	int b = (ionput - a) / 16;
-	char msg[3] = {hexChardata[b], hexChardata[a], '\0'};
-	print_char(msg[0], -1, -1, 0);
-	print_char(msg[1], -1, -1, 0);
-	return;
-}
-
-void printInt(long int in)
-{
-	char outputIintegers[11];
-
-	// set end of string
-	outputIintegers[10] = 0;
-	int index = 9;
-	while (index >= 0 && in >= 0)
-	{
-		outputIintegers[index] = in % 10 + '0';
-		in /= 10;
-		index--;
-	}
-
-	kprint(outputIintegers);
-	return;
-}
 
 /**********************************************************
  * Public Kernel API functions                            *
@@ -176,3 +150,35 @@ void clear_screen() {
 int get_offset(int col, int row) { return 2 * (row * MAX_COLS + col); }
 int get_offset_row(int offset) { return offset / (2 * MAX_COLS); }
 int get_offset_col(int offset) { return (offset - (get_offset_row(offset)*2*MAX_COLS))/2; }
+
+void printHex(unsigned char ionput)
+{
+	char hexChardata[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+	int a = ionput % 16;
+	int b = (ionput - a) / 16;
+	char msg[3] = {hexChardata[b], hexChardata[a], '\0'};
+	print_char(msg[0], -1, -1, 0);
+	print_char(msg[1], -1, -1, 0);
+	return;
+}
+
+void printInt(long long in)
+{
+	char outputIintegers[21];
+
+	// set end of string
+	outputIintegers[20] = 0;
+	int index = 19;
+	while (index >= 0 && in)
+	{
+		outputIintegers[index] = mod(in, 10) + '0';
+		// in = in / 10
+		in = divm(in, 10);
+		index--;
+	}
+
+	kprint(outputIintegers);
+
+	return;
+}
