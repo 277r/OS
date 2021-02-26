@@ -5,6 +5,7 @@
 #include "../cpu/isr.h"
 #include "../libc/mem.h"
 #endif
+
 typedef struct page {
 	u32 present : 1;
 	u32 rw : 1;

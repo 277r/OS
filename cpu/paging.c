@@ -3,6 +3,109 @@
 #include "paging.h"
 
 /*
+	explanation:
+	all memory available gets split up into 4KiB blocks
+	all pages are in order
+	if we want bigger pages we need 1024 pages in a row (like 4MiB instead of 4KiB)
+	these pages get a certain bit changed that shows its reserved by another page
+
+
+
+
+
+
+example:
+512KiB of ram
+4KiB of ram/page 
+lets say page size = 16 bytes
+
+
+2048KiB / 4KiB = 512 pages needed
+
+512 * 16 = 8192 bytes needed for all pages
+
+512KiB -8192 = 510KiB of actual space
+
+so we need something against that
+
+
+
+
+
+*/
+
+// here will be some tests where i try software paging
+
+long long *aop = (long long*)0x20000;
+
+// place that the first page points to
+
+long long fpll = sizeof(bruh_t);
+void *fpl;
+
+// 0x1000 = 4KiB
+bruh_t *page = (bruh_t*)0x21000;
+// create pages by memory size, divide whole memory into 4KiB blocks and then decide what amount to reserve for the page handler stuff
+void init_pages(long long memSize)
+{
+	
+	// 
+	*aop = memSize / 4096;
+
+	// remove the pages from memory because we can't use that space
+	memSize -= (*aop) * sizeof(bruh_t);
+	// now we have the full amount of ram that we can actually use, the amount needed for paging is not in this value
+	*aop = memSize / 4096;
+
+	// set fpl to point to the first location in memory that we cna actually use
+	fpll *= *aop;
+	fpll += 0x21000;
+	fpl = (void*) fpll;
+
+	for (long long x = 0; x < *aop; x++)
+	{
+		// *(page + x)
+		page[x].h = 0;
+	}
+	for (long long x = 0; x < *aop; x++){
+		// make pages go from every 4 KiB
+		page[x].loc = (long long) fpl + (4096 * x);
+	}
+	return;
+}
+
+void delete_page(long long pageID){
+	page[pageID].h = 0;
+	// store
+
+
+}
+
+void delete_pages_by_pid(long pid){
+	for (long long x = 0; x < *aop; x++){
+		if (page[x].proc == pid){
+			delete_page(x);
+		}
+	}
+}
+
+
+// return code 1 = success, 2 = fail;
+char create_page(char size){
+	// 1 = 4KiB, 2 = 4MiB, 3 = 4GiB
+	if (size == 1){
+		for (long long x = 0; x < *aop; x++){
+			// and h with 0xF to get last 4 bytes
+			if(page[x].h & 0xF == 0){
+				page[x].h = 1;
+			}
+		}
+	}
+}
+
+
+
+/*
 u32 *frames;
 u32 nframes;
 extern u32 free_mem_addr;

@@ -46,9 +46,9 @@ void user_input(char *input)
 			kprint("kB\n");
 			
 	}
-	else if (strcmp(input, "h") == 0)
+	else if (strcmp(input, "calc") == 0)
 	{
-		printInt(92233720368575807);
+		// calculator stuff
 	}
 
 	else {
