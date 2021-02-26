@@ -3,25 +3,14 @@
 
 
 
-
-
-// SMAP entry structure
-
-typedef struct SMAP_entry
-{
-
-	long  BaseL; // base address long long
-	long  BaseH;
-	long  LengthL; // length long long
-	long  LengthH;
-	long  Type;		// entry Type
-	long  ACPI;		// extended
-} __attribute__((packed)) SMAP_entry_t;
-
 long long getMemSize(){
-	// we could optimize this later but idk
-	int *entry_count = (int*)0x8000;
+	
+
 	SMAP_entry_t *smap = (SMAP_entry_t *)0x1000;
+
+	// we could optimize this later but idk
+	int *entry_count = (int*)0x16000;
+
 	long smapInt = 0;
 
 	const int smap_size = 0x2000;
@@ -31,22 +20,17 @@ long long getMemSize(){
 	if (*entry_count == -1)
 	{
 		// error - halt system and/or show error message
+		//smap++;
 		return 1;
 	}
 
-	else
-	{
-		// process memory map
+	// get unlazy and follow this:
+	// https://wiki.osdev.org/Detecting_Memory_(x86)#Detecting_Upper_Memory
 
-		// bitshift lower 32 stuff
-	//	fullSize |= smap->LengthH << 32;
-		fullSize |= smap->LengthL;
 
-		// we need to process this, this output does nothing
-		return fullSize;
-	}
+	return fullSize;
+
 }
-
 
 // all code below did not seem to work, trying to use something in boot/bootsect.asm
 /*

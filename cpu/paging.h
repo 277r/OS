@@ -4,6 +4,7 @@
 #include "../cpu/types.h"
 #include "../cpu/isr.h"
 #include "../libc/mem.h"
+#endif
 typedef struct page {
 	u32 present : 1;
 	u32 rw : 1;
@@ -26,6 +27,9 @@ typedef struct page_dir {
 	// the physical addr of tablesPhysical
 	u32 physicalAddr;
 }__attribute__((packed)) page_dir_t;
+
+
+/*
 // enables paging?
 void initialise_paging();
 // loads the specified page dir into the CR3 register
@@ -35,4 +39,4 @@ void switch_page_dir(page_dir_t *new_page);
 page_t *get_page(u32 addr, int make, page_dir_t *dir);
 // handler for page faults
 void page_fault(registers_t regs);
-#endif
+*/

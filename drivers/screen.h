@@ -14,6 +14,7 @@
 /* Screen i/o ports */
 #define REG_SCREEN_CTRL 0x3d4
 #define REG_SCREEN_DATA 0x3d5
+#endif
 
 /* Public kernel API */
 void clear_screen();
@@ -24,4 +25,3 @@ void kprint_backspace();
 
 void printHex(unsigned char ionput);
 void printInt(long long in);
-#endif

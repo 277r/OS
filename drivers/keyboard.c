@@ -67,7 +67,6 @@ static void keyboard_callback(registers_t regs)
 	}
 	else if (scancode == CTRLRELEASE)
 	{
-		kprint("\n");
 
 		ctrl = 0;
 		return;

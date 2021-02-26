@@ -1,6 +1,8 @@
 #include "../common.h"
 #include "types.h"
 #include "paging.h"
+
+/*
 u32 *frames;
 u32 nframes;
 extern u32 free_mem_addr;
@@ -34,7 +36,7 @@ static u32 test_frame(u32 frame_addr) {
 //finds first free frame
 static u32 first_frame() {
 	u32 i,j;
-	for (i=0;i <  INDEX_FROM_BIT/*should i precompute this*/(nframes); i++);
+	for (i=0;i <  INDEX_FROM_BIT(nframes); i++);
 	if(frames[i] != 0xFFFFFFFF) {
 		//at least one bit is free
 		for(j=0;j<32;j++) {
@@ -120,7 +122,7 @@ page_t *get_page(u32 addr, int make, page_dir_t *dir) {
 	addr /= 0x1000;
 	// find the page table containing this address
 	u32 table_idx = addr / 1024;
-	if(dir->tables[table_idx]) /* is this table already assigned */{
+	if(dir->tables[table_idx]) {
 		return &dir->tables[table_idx]->pages[addr%1024];
 	} else if(make) {
 		u32 tmp;
@@ -161,3 +163,4 @@ void page_fault(registers_t regs) {
 	// PANIC("Page fault");
 	for(;;);
 }
+*/

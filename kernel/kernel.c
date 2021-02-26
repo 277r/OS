@@ -41,15 +41,14 @@ void user_input(char *input)
 		kprint("list of commands:\nhelp    lists all commands and their functioning\nhalt    stops the machine");
 	}
 	else if (strcmp(input, "memsize") == 0){
-		kprint("current memsize: ");
-		printInt(getMemSize());
-		kprint("kB");
+			kprint("memsize: ");
+			printInt(getMemSize());
+			kprint("kB\n");
+			
 	}
-	else if (strcmp(input, "mathtests") == 0)
+	else if (strcmp(input, "h") == 0)
 	{
-		kprint("h");
-		printInt(324);
-		kprint("kB");
+		printInt(92233720368575807);
 	}
 
 	else {

@@ -55,7 +55,7 @@ do_debug:
 ;       The consequence of overwriting the BIOS code will lead to problems like getting stuck in `int 0x15`
 ; inputs: es:di -> destination buffer for 24 byte entries
 ; outputs: bp = entry count, trashes all registers except esi
-mmap_ent equ 0x8000             ; the number of entries will be stored at 0x8000
+mmap_ent equ 0x16000             ; the number of entries will be stored at 0x16000
 [bits 16]
 do_e820:
 	mov di, 0x8004          ; Set di to 0x8004. Otherwise this code will get stuck in `int 0x15` after some entries are fetched 

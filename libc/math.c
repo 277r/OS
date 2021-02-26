@@ -1,7 +1,10 @@
 #include "math.h"
 
-long long pow(long long a, long long b)
-{
+long long power(long long a, long long b)
+{	
+	if (b == 0){
+		return 1;
+	}
 	long long n = a;
 	while (b > 1)
 	{
@@ -12,6 +15,9 @@ long long pow(long long a, long long b)
 	return a;
 }
 
+
+
+// this thing doesn't seem to ever output a 1
 long long mod(long long a, long long b)
 {
 	/* remainder (stop when this hits 0)*/
@@ -35,7 +41,7 @@ long long mod(long long a, long long b)
 		}
 
 		currentExp = 0;
-		while (x <= rem)
+		while (x <= rem && x > 0)
 		{
 			/* bitshift to left so it multiplies by 2*/
 			x <<= 1;
@@ -47,7 +53,7 @@ long long mod(long long a, long long b)
 		rem -= x >> 1;
 
 		/* add result as exponent of 2 back (-1 because we made one bitshift too much)*/
-		result += pow(2, currentExp - 1);
+		result += power(2, currentExp - 1);
 
 		/* incomplete as of rn*/
 	}
@@ -76,7 +82,7 @@ long long divm(long long a, long long b)
 		}
 
 		currentExp = 0;
-		while (x <= rem)
+		while (x <= rem && x > 0)
 		{
 			/* bitshift to left so it multiplies by 2*/
 			x <<= 1;
@@ -88,7 +94,7 @@ long long divm(long long a, long long b)
 		rem -= x >> 1;
 
 		/* add result as exponent of 2 back (-1 because we made one bitshift too much)*/
-		result += pow(2, currentExp - 1);
+		result += power(2, currentExp - 1);
 
 		/* incomplete as of rn*/
 	}
