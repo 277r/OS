@@ -74,6 +74,11 @@ void init_pages(long long memSize)
 	return;
 }
 
+void* getFPL(){
+	
+	return fpl;
+}
+
 void delete_page(long long pageID){
 	page[pageID].h = 0;
 	// store

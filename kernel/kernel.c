@@ -4,6 +4,7 @@
 #include "../libc/string.h"
 #include "../libc/mem.h"
 #include "../cpu/paging.h"
+#include "../libc/math.h"
 
 /*memory driving header*/
 #include "../drivers/mem.h"
@@ -43,14 +44,23 @@ void user_input(char *input)
 	else if (strcmp(input, "memsize") == 0){
 			kprint("memsize: ");
 			printInt(getMemSize());
-			kprint("kB\n");
+			kprint("KiB\n");
 			
+	}
+	else if (strcmp(input, "mem801") == 0)
+	{
+		// the other memtest that only works up to 4GiB;
+		printInt(memSize801() * 64);
+		kprint("KiB\n");
 	}
 	else if (strcmp(input, "calc") == 0)
 	{
 		// calculator stuff
 	}
-
+	else if (strcmp(input, "clear") == 0)
+	{
+		clear_screen();
+	}
 	else {
 		kprint("command not found");
 	}

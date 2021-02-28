@@ -1,7 +1,15 @@
 #include "../cpu/types.h"
+#include "../cpu/paging.h"
 #include "mem.h"
 
 
+void* malloc(long long bytes){
+	// allocate memory and round to multiples of 4KiB
+
+}
+void free(void* srcpointer){
+
+}
 
 long long getMemSize(){
 	
@@ -9,7 +17,7 @@ long long getMemSize(){
 	SMAP_entry_t *smap = (SMAP_entry_t *)0x1000;
 
 	// we could optimize this later but idk
-	int *entry_count = (int*)0x16000;
+	int *entry_count = (int*)0xFF00;
 
 	long smapInt = 0;
 
@@ -27,13 +35,19 @@ long long getMemSize(){
 	// get unlazy and follow this:
 	// https://wiki.osdev.org/Detecting_Memory_(x86)#Detecting_Upper_Memory
 
+	fullSize += *entry_count;
 
 	return fullSize;
 
 }
 
-// all code below did not seem to work, trying to use something in boot/bootsect.asm
-/*
+long long memSize801(){
+	long long *h = (long long *)0x8000;
+	return (*h);
+}
+
+	// all code below did not seem to work, trying to use something in boot/bootsect.asm
+	/*
 long getMemSize(){
 	
 	long x = 0;

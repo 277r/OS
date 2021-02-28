@@ -25,7 +25,10 @@ let_it_start:
 	call load_kernel ; read the kernel from disk
 
 	; first get this done or stuff might not work
-	call do_e820 ; get the memory stuff done
+	; try do_e801 first because i don't understand e820 SMAP yet
+	;call do_e820 ; get the memory stuff done
+
+	call do_e801;
 
 	call switch_to_pm ; disable interrupts, load GDT,  etc. Finally jumps to 'BEGIN_PM'
 	jmp $ ; Never executed
@@ -55,7 +58,8 @@ do_debug:
 ;       The consequence of overwriting the BIOS code will lead to problems like getting stuck in `int 0x15`
 ; inputs: es:di -> destination buffer for 24 byte entries
 ; outputs: bp = entry count, trashes all registers except esi
-mmap_ent equ 0x16000             ; the number of entries will be stored at 0x16000
+; can't go above 0xFFFF because exceeds 16 bit stuff smh
+mmap_ent equ 0xFF00           ; the number of entries will be stored at 0xFF00
 [bits 16]
 do_e820:
 	mov di, 0x8004          ; Set di to 0x8004. Otherwise this code will get stuck in `int 0x15` after some entries are fetched 
@@ -104,7 +108,38 @@ do_e820:
 	ret
 
 
+[bits 16]
+do_e801:
+	; these 2 might fuck something up maybe
 
+	XOR ECX, ECX
+	XOR EDX, EDX
+	MOV AX, 0xE801
+	INT 0x15		; request upper memory size
+	JC SHORT .ERR
+	CMP AH, 0x86		; unsupported function
+	JE SHORT .ERR
+	CMP AH, 0x80		; invalid command
+	JE SHORT .ERR
+	JCXZ .USEAX		; was the CX result invalid?
+ 
+	MOV AX, CX
+	MOV BX, DX
+	
+	
+	mov [0x8000], DX; copy to 0x8000
+	ret;
+.USEAX:
+	; AX = number of contiguous Kb, 1M to 16M
+	; BX = contiguous 64Kb pages above 16M
+	mov [0x8000], BX; copy to 0x8000
+	ret;
+.ERR:
+	mov ah, 0x0e ; tty mode
+	mov al, 'H'
+	int 0x10
+	hlt;
+	ret;
 
 
 

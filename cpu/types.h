@@ -32,13 +32,26 @@ typedef struct MEM_PAGE {
 	// 0 = free, 1 = used, 2 = space used by other page (i.e. larger page than 4KiB)
 	char h;
 
+	// amount that is used, also acts as index to if we can fill up this page more
+	long long bytesUsed;
 	// process that uses this page
 	long proc;
 	// location in ram this table is;
 	long long loc;
-	// virtual address
+	// virtual address ? probably not needed
 	long long virt_addr_start;
 } bruh_t;
+
+/* Struct which aggregates many registers */
+typedef struct
+{
+	u32 ds;										/* Data segment selector */
+	u32 edi, esi, ebp, esp, ebx, edx, ecx, eax; /* Pushed by pusha. */
+	u32 int_no, err_code;						/* Interrupt number and error code (if applicable) */
+	u32 eip, cs, eflags, useresp, ss;			/* Pushed by the processor automatically */
+} registers_t;
+
+
 
 #define low_16(address) (u16)((address) & 0xFFFF)
 #define high_16(address) (u16)(((address) >> 16) & 0xFFFF)
