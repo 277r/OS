@@ -40,16 +40,19 @@ long long *aop = (long long*)0x20000;
 
 // place that the first page points to
 
-long long fpll = sizeof(bruh_t);
+unsigned long fpll = sizeof(bruh_t);
 void *fpl;
+
 
 // 0x1000 = 4KiB
 bruh_t *page = (bruh_t*)0x21000;
 // create pages by memory size, divide whole memory into 4KiB blocks and then decide what amount to reserve for the page handler stuff
 void init_pages(long long memSize)
-{
-	
-	// 
+{	
+	// remove the 0x21000 bytes already in use
+	memSize -= 0x21000;
+
+	// divide into 4K chunks
 	*aop = memSize / 4096;
 
 	// remove the pages from memory because we can't use that space
@@ -57,19 +60,22 @@ void init_pages(long long memSize)
 	// now we have the full amount of ram that we can actually use, the amount needed for paging is not in this value
 	*aop = memSize / 4096;
 
-	// set fpl to point to the first location in memory that we cna actually use
+	// set fpl to point to the first location in memory that we cna actually use, after all the stuff
 	fpll *= *aop;
 	fpll += 0x21000;
 	fpl = (void*) fpll;
 
 	for (long long x = 0; x < *aop; x++)
 	{
-		// *(page + x)
+		// *(page + x) = 0
 		page[x].h = 0;
 	}
 	for (long long x = 0; x < *aop; x++){
 		// make pages go from every 4 KiB
-		page[x].loc = (long long) fpl + (4096 * x);
+		page[x].loc = (void*) (fpl + (4096 * x));
+		page[x].bytesUsed = 0;
+		page[x].currentINdex = 0;
+
 	}
 	return;
 }
@@ -96,20 +102,25 @@ void delete_pages_by_pid(long pid){
 
 
 // return code 1 = success, 2 = fail;
-char create_page(char size){
+void* create_page(char size){
 	// 1 = 4KiB, 2 = 4MiB, 3 = 4GiB
 	if (size == 1){
 		for (long long x = 0; x < *aop; x++){
 			// and h with 0xF to get last 4 bytes
 			if(page[x].h & 0xF == 0){
+				// set to used
 				page[x].h = 1;
+				// return locaton of pointer
+				return page[x].loc;
 			}
 		}
 	}
+	else if (size == 2)
+	{
+		// much more complicated
+		
+	}
 }
-
-
-
 /*
 u32 *frames;
 u32 nframes;

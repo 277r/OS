@@ -1,16 +1,31 @@
 #include "../cpu/types.h"
 #include "../cpu/paging.h"
 #include "mem.h"
+#include "../libc/math.h"
 
 
 void* malloc(long long bytes){
-	// allocate memory and round to multiples of 4KiB
-
+	
+	long long x = bytes;
+	if (x <= 4096){
+		// allocate 4K pages
+		return create_page(1);
+	}
+	else if (x <= 4194304)
+	{
+		// give 4MiB pages
+		return create_page(2);
+	}
 }
 void free(void* srcpointer){
 
 }
 
+
+/*for some stupid reason i used 0x1000, which is also the entry point of our programme, maybe this makes it fail
+	i have also disabled this in the boot sector stuff 
+*/
+/*
 long long getMemSize(){
 	
 
@@ -32,15 +47,24 @@ long long getMemSize(){
 		return 1;
 	}
 
-	// get unlazy and follow this:
-	// https://wiki.osdev.org/Detecting_Memory_(x86)#Detecting_Upper_Memory
+	for (int i = 0; i < *entry_count; i++){
 
-	fullSize += *entry_count;
+		
+		if (1)
+		{
+			
+			//fullSize += smap->LengthH << 32;
+			fullSize += smap->LengthL;
+		}
+		smap++;
+	}
+		// get unlazy and follow this:
+		// https://wiki.osdev.org/Detecting_Memory_(x86)#Detecting_Upper_Memory
 
-	return fullSize;
-
+	// divide by 1024 to get KiB
+	return divm(fullSize, 1024);
 }
-
+*/
 long long memSize801(){
 	long long *h = (long long *)0x8000;
 	return (*h);

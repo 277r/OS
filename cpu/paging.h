@@ -29,6 +29,11 @@ typedef struct page_dir {
 	u32 physicalAddr;
 }__attribute__((packed)) page_dir_t;
 
+void init_pages(long long memSize);
+void *getFPL();
+void delete_page(long long pageID);
+void delete_pages_by_pid(long pid);
+void *create_page(char size);
 
 /*
 // enables paging?

@@ -16,6 +16,7 @@
 		"istream": "c",
 		"functional": "c",
 		"tuple": "c",
-		"utility": "c"
+		"utility": "c",
+		"string.h": "c"
 	}
 }

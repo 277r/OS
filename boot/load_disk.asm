@@ -22,7 +22,9 @@ disk_load:
 
     pop dx
     cmp al, dh    ; BIOS also sets 'al' to the # of sectors read. Compare it.
-    jne sectors_error
+    
+    ; stop this line since i think it makes things stop wroking well
+    ;jne sectors_error
     popa
     ret
 

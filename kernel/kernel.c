@@ -12,7 +12,14 @@
 /*running child proccess*/
 int rCP = 0;
 
-void _start() {
+
+
+
+
+void start()
+{ 
+	// malloc 4KiB
+	//strcopy(data, "list of commands:\nhelp    lists all commands and their functioning\nhalt    stops the machine\nmem801    lists memory size up to 4GiB using e801\nmemsize    broken thing that doesn't work\ncalc    not implemented yet\nclear    clears screen");
 	clear_screen();
 	isr_install();
 	irq_install();
@@ -39,19 +46,27 @@ void user_input(char *input)
 		kprint("\n");
 	}*/
 	else if (strcmp(input, "help") == 0){
-		kprint("list of commands:\nhelp    lists all commands and their functioning\nhalt    stops the machine");
+		
+		kprint("list of commands:\n");
+		kprint("help    lists all commands and their functioning\n");
+		kprint("halt    stops the machine\n");
+		kprint("mem801    lists memory size up to 4GiB using e801\n");
+		kprint("memsize    broken thing that doesn't work\n");
+		kprint("calc    not implemented yet\n");
+		kprint("clear    clears screen ");
+		//kprint("list of commands:\nhelp    lists all commands and their functioning\nhalt    stops the machine\nmem801    lists memory size up to 4GiB using e801\nmemsize    broken thing that doesn't work\ncalc    not implemented yet\nclear    clears screen");
 	}
 	else if (strcmp(input, "memsize") == 0){
 			kprint("memsize: ");
-			printInt(getMemSize());
-			kprint("KiB\n");
+			//printInt(getMemSize());
+			kprint("KiB");
 			
 	}
 	else if (strcmp(input, "mem801") == 0)
 	{
 		// the other memtest that only works up to 4GiB;
 		printInt(memSize801() * 64);
-		kprint("KiB\n");
+		kprint("KiB");
 	}
 	else if (strcmp(input, "calc") == 0)
 	{

@@ -15,15 +15,17 @@ typedef          char  s8;
 typedef struct SMAP_entry
 {
 
-	long long Base; // base address long long
-	long long Length;
-	long Type; // entry Type
-	long ACPI; // extended
-} __attribute__((packed)) SMAP_entry_t;
+	unsigned long BaseL; // idk
+	unsigned long BaseH; // base address long long
+	unsigned long LengthL;
+	unsigned long LengthH;
+	unsigned long Type; // entry Type
+	unsigned long ACPI; // extended
+} SMAP_entry_t;
 
 
 // this is for some test stuff i'm currently doing, can probably be ignored
-typedef struct MEM_PAGE {
+typedef struct {
 
 	// first 4 bytes = size
 	// last 4 bytes = used / not;
@@ -32,15 +34,15 @@ typedef struct MEM_PAGE {
 	// 0 = free, 1 = used, 2 = space used by other page (i.e. larger page than 4KiB)
 	char h;
 
-	// amount that is used, also acts as index to if we can fill up this page more
-	long long bytesUsed;
+	// acts as index to if we can fill up this page more
+	unsigned long currentINdex;
+	// amount that is used, can increase/decrease 
+	unsigned long bytesUsed;
 	// process that uses this page
 	long proc;
 	// location in ram this table is;
-	long long loc;
-	// virtual address ? probably not needed
-	long long virt_addr_start;
-} bruh_t;
+	void* loc;
+	} bruh_t;
 
 /* Struct which aggregates many registers */
 typedef struct

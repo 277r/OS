@@ -1,0 +1,2 @@
+
+void loadsectors(int amount);

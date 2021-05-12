@@ -8,9 +8,8 @@ CC = /home/rs/Desktop/elf_compiler/i686-elf-tools-linux/bin/i686-elf-gcc
 LD = /home/rs/Desktop/elf_compiler/i686-elf-tools-linux/bin/i686-elf-ld
 GDB = /home/rs/Desktop/elf_compiler/i686-elf-tools-linux/bin/i686-elf-gdb
 # -g: Use debugging symbols in gcc
-CFLAGS =  -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector -nostartfiles -nodefaultlibs #\
-
-LDFLAGS = -m elf_i386
+CFLAGS =  -m32 -nostdlib -nostdinc -Wall -Wextra -fno-builtin -nostartfiles -nodefaultlibs -fno-stack-protector
+LDFLAGS = -m elf_i386 -T link.ld
 #		 -Wall -Wextra -Werror
 #CFLAGS = -nostdlib -nostdinc -fno-builtin -fno-stack-protector
 # First rule is run by default
@@ -20,11 +19,11 @@ os-image.bin: boot/bootsect.bin kernel.bin
 # '--oformat binary' deletes all symbols as a collateral, so we don't need
 # to 'strip' them manually on this case
 kernel.bin: boot/kernel_entry.o ${OBJ}
-	${LD} -o $@ -Ttext 0x1000 $^ --oformat binary ${LDFLAGS}
+	${LD} -o $@ $^ --oformat binary ${LDFLAGS}
 
 # Used for debugging purposes
 kernel.elf: boot/kernel_entry.o ${OBJ}
-	${LD} -o $@ -Ttext 0x1000 $^ ${LDFLAGS}
+	${LD} -o $@ $^ ${LDFLAGS}
 
 run: os-image.bin
 	qemu-system-x86_64 -hda os-image.bin -m 128M

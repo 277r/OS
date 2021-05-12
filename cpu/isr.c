@@ -4,6 +4,7 @@
 #include "../drivers/screen.h"
 #include "../libc/string.h"
 #include "timer.h"
+
 #include "../drivers/keyboard.h"
 isr_t interrupt_handlers[256];
 /* Can't do this with a loop because we need the address
@@ -153,4 +154,5 @@ void irq_install() {
 	asm volatile("sti");
 	init_timer(50);
 	init_keyboard();
+
 }
