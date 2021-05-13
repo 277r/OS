@@ -18,12 +18,15 @@ disk_load:
     ; [es:bx] <- pointer to buffer where the data will be stored
     ; caller sets it up for us, and it is actually the standard location for int 13h
     int 0x13      ; BIOS interrupt
+
+    ; disable disk errors because hhh
     jc disk_error ; if error (stored in the carry bit)
 
     pop dx
     cmp al, dh    ; BIOS also sets 'al' to the # of sectors read. Compare it.
     
     ; stop this line since i think it makes things stop wroking well
+    ; the amount of sectors we read isn't always equal to what we want to read. end of disk means no sectors left means less sectors read than we wanted to read
     ;jne sectors_error
     popa
     ret

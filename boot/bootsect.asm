@@ -30,8 +30,7 @@ let_it_start:
 
 	call do_e801; find the first 4 possible GiB
 
-	; disabled the e820 method because it might overwrite our kernel
-	;call do_e820; other ram detecting method for more than 4GiB
+	call do_e820; other ram detecting method for more than 4GiB
 
 	call switch_to_pm ; disable interrupts, load GDT,  etc. Finally jumps to 'BEGIN_PM'
 	jmp $ ; Never executed
@@ -44,8 +43,8 @@ let_it_start:
 [bits 16]
 load_kernel:
 	mov bx, KERNEL_OFFSET ; Read from disk and store in 0x1000
-	; max amount of sectors to load = 0x80, loading more sectors might make our bios work again
-	mov dh, 0x16 
+	; max amount of sectors to load = 0x80, loading more sectors might make our kernel work again
+	mov dh, 0x17
 	mov dl, [BOOT_DRIVE]
 	call disk_load
 	ret

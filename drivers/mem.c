@@ -22,14 +22,15 @@ void free(void* srcpointer){
 }
 
 
-/*for some stupid reason i used 0x1000, which is also the entry point of our programme, maybe this makes it fail
+/*
+	using 0x8000 so we don't overwrite our kernel
 	i have also disabled this in the boot sector stuff 
 */
-/*
+
 long long getMemSize(){
 	
 
-	SMAP_entry_t *smap = (SMAP_entry_t *)0x1000;
+	SMAP_entry_t *smap = (SMAP_entry_t *)0x8000;
 
 	// we could optimize this later but idk
 	int *entry_count = (int*)0xFF00;
@@ -49,12 +50,24 @@ long long getMemSize(){
 
 	for (int i = 0; i < *entry_count; i++){
 
+		kprint("memory type: ");
+			printInt(smap->Type);
+			kprint("\nmemory ACPI type: ");
+			printInt(smap->ACPI);
+			kprint("\nmemory length:");
+			printInt(smap->LengthH << 32 + smap->LengthL);
+			kprint("\n");
 		
-		if (1)
+		// when not 2 it should often be allright, but just making this one in case
+		if (smap->ACPI == 1)
 		{
 			
-			//fullSize += smap->LengthH << 32;
+			fullSize += smap->LengthH << 32;
 			fullSize += smap->LengthL;
+		
+		
+			
+
 		}
 		smap++;
 	}
@@ -64,7 +77,7 @@ long long getMemSize(){
 	// divide by 1024 to get KiB
 	return divm(fullSize, 1024);
 }
-*/
+
 long long memSize801(){
 	long long *h = (long long *)0x8000;
 	return (*h);

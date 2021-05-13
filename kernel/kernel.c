@@ -56,11 +56,11 @@ void user_input(char *input)
 		kprint("clear    clears screen ");
 		//kprint("list of commands:\nhelp    lists all commands and their functioning\nhalt    stops the machine\nmem801    lists memory size up to 4GiB using e801\nmemsize    broken thing that doesn't work\ncalc    not implemented yet\nclear    clears screen");
 	}
-	else if (strcmp(input, "memsize") == 0){
+	else if (strcmp(input, "memmap") == 0){
 			kprint("memsize: ");
-			//printInt(getMemSize());
+			printInt(getMemSize());
 			kprint("KiB");
-			
+			// print regions too
 	}
 	else if (strcmp(input, "mem801") == 0)
 	{

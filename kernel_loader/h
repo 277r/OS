@@ -1,0 +1,5 @@
+gets memory map,
+loads the kernel into memory,
+starts the kernel
+
+(grub but worse)
